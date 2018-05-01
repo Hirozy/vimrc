@@ -79,6 +79,7 @@ function! BuildYCM(info)
         !echo "Nothing to do"
     else
         !/usr/bin/python3 install.py --clang-completer --go-completer
+    endif
   endif
 endfunction
 
