@@ -4,9 +4,6 @@ syntax on                   " Enable syntax highlighting.
 set nu
 set encoding=utf-8
 set clipboard=unnamed
-" for molokai
-"let g:molokai_original = 1
-"let g:rehash256 = 1
 
 :set norelativenumber
 augroup relative_number
@@ -85,14 +82,21 @@ endfunction
 
 Plug 'Valloric/YouCompleteMe', { 'do': function('BuildYCM') }
 
+" Plug 'davidhalter/jedi-vim'
+
+" Plug 'Shougo/deoplete.nvim'
+" Plug 'roxma/nvim-yarp'
+" Plug 'roxma/vim-hug-neovim-rpc'
+" Plug 'zchee/deoplete-jedi'
+
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 
-Plug 'kana/vim-textobj-user'
-Plug 'kana/vim-textobj-indent'
-Plug 'kana/vim-textobj-syntax'
-Plug 'kana/vim-textobj-function', { 'for':['c', 'cpp', 'vim', 'java'] }
-Plug 'sgur/vim-textobj-parameter'
+" Plug 'kana/vim-textobj-user'
+" Plug 'kana/vim-textobj-indent'
+" Plug 'kana/vim-textobj-syntax'
+" Plug 'kana/vim-textobj-function', { 'for':['c', 'cpp', 'vim', 'java'] }
+" Plug 'sgur/vim-textobj-parameter'
 
 Plug 'terryma/vim-multiple-cursors'
 
@@ -106,8 +110,8 @@ Plug 'mhinz/vim-signify'
 
 Plug 'octol/vim-cpp-enhanced-highlight'
 
-Plug 'SirVer/ultisnips'
-Plug 'honza/vim-snippets'
+" Plug 'SirVer/ultisnips'
+" Plug 'honza/vim-snippets'
 
 " Plug 'lervag/vimtex'
 
@@ -117,6 +121,8 @@ Plug 'tomasr/molokai'
 
 Plug 'scrooloose/nerdtree', { 'on':  'NERDTreeToggle' }
 
+Plug 'Shougo/echodoc.vim'
+
 " Initialize plugin system
 call plug#end()
 
@@ -125,8 +131,8 @@ set background=dark
 colorscheme solarized
 
 " for molokai
-"colorscheme molokai
-"let g:molokai_original = 1
+" colorscheme molokai
+" let g:molokai_original = 1
 let g:rehash256 = 1
 
 let g:asyncrun_open=6
@@ -134,23 +140,43 @@ let g:asyncrun_bell=1
 nnoremap <silent> <F10> :call asyncrun#quickfix_toggle(6) <CR>
 nnoremap <silent> <F9> :AsyncRun g++ -g -Wall -O2 "$(VIM_FILEPATH)" -o "$(VIM_FILEDIR)/a.out" <CR>
 nnoremap <F5> :call CompileOption() <CR>
+nnoremap <F6> :call CompileOptionWithInput() <CR>
+
 nnoremap <F2><F5> :so $HOME/.vim/vimrc <CR>
 nnoremap <F2>pi :PlugInstall <CR>
 nnoremap <F2>pu :PlugUpdate <CR>
 nnoremap <F2>pc :PlugClean <CR>
 nnoremap <F2>pp :PlugUpgrade <CR>
-map <C-n> :NERDTreeToggle <CR>
+nnoremap <C-n> :call ToggleNERD() <CR>
 
 function! CompileOption()
     exec "w"
     if &filetype == 'cpp'
-        :AsyncRun g++ -g -Wall "$(VIM_FILEPATH)" -o "$(VIM_FILEDIR)/a.out"
-        :AsyncRun -raw -mode=2 -cwd=$(VIM_FILEDIR) "$(VIM_FILEDIR)/a.out"
+        :AsyncRun g++ -g -Wall -O2 "$(VIM_FILEPATH)" -o "$(VIM_FILEDIR)/a.out"
+        :sleep
+        :AsyncRun -raw -mode=0 -cwd="$(VIM_FILEDIR)" "$(VIM_FILEDIR)/a.out"
     elseif &filetype == 'python' 
-        :AsyncRun -mode=2 python3 "$(VIM_FILEPATH)"
+        :AsyncRun -cwd="$(VIM_FILEDIR)" python3 "$(VIM_FILEPATH)"
     elseif &filetype == 'tex'
-        :AsyncRun -cwd=$(VIM_FILEDIR) pdflatex  -synctex=1 -interaction=nonstopmode -file-line-error -recorder "$(VIM_FILEPATH)"
+        :AsyncRun -cwd="$(VIM_FILEDIR)" pdflatex  -synctex=1 -interaction=nonstopmode -file-line-error -recorder "$(VIM_FILEPATH)"
     endif
+endfunction
+
+function! CompileOptionWithInput()
+    exec "w"
+    if &filetype == 'cpp'
+        :AsyncRun g++ -g -Wall -O2 "$(VIM_FILEPATH)" -o "$(VIM_FILEDIR)/a.out"
+        :call asyncrun#quickfix_toggle(6)
+        :sleep
+        :AsyncRun -raw -mode=2 -cwd="$(VIM_FILEDIR)" "$(VIM_FILEDIR)/a.out"
+    elseif &filetype == 'python'
+        :AsyncRun -cwd="$(VIM_FILEDIR)" -mode=2 python3 "$(VIM_FILEPATH)" 
+    endif
+endfunction
+
+function! ToggleNERD()
+    exec "NERDTreeToggle"
+    :AsyncRun echo "Toggle NERDTree"
 endfunction
 
 " For airline
@@ -159,7 +185,7 @@ let g:airline_powerline_fonts=1
 
 
 " For YCM
-let g:ycm_global_ycm_extra_conf='~/.vim/.ycm_extra_conf.py'
+let g:ycm_global_ycm_extra_conf='~/.vim/ycm_extra_conf_mac.py'
 let g:ycm_add_preview_to_completeopt=0
 let g:ycm_show_diagnostics_ui=0
 let g:ycm_server_log_level='info'
@@ -167,6 +193,8 @@ let g:ycm_min_num_identifier_candidate_chars=2
 let g:ycm_collect_identifiers_from_comments_and_strings=1
 let g:ycm_complete_in_strings=1
 let g:ycm_key_invoke_completion='<c-z>'
+let g:ycm_server_python_interpreter = '/usr/local/bin/python3' 
+let g:ycm_path_to_python_interpreter = ''
 set completeopt=menu,menuone
 
 noremap <c-z> <NOP>
@@ -176,11 +204,12 @@ let g:ycm_semantic_triggers={
 			\ 'cs,lua,javascript': ['re!\w{2}'],
 			\ }
 
-"let g:ycm_filetype_whitelist={ 
+let g:ycm_filetype_whitelist={ 
 			\ 'c':1,
 			\ 'cpp':1, 
 			\ 'go':1,
-            \ 'python':1
+            \ 'python':1,
+            \ 'vim':1
 			\ }
 
 let g:pymode_options=1
@@ -218,4 +247,16 @@ let g:UltiSnipsJumpBackwardTrigger="<c-z>"
 " If you want :UltiSnipsEdit to split your window.
 " let g:UltiSnipsEditSplit="vertical"
 
+" For NerdTree
+let NERDTreeMinimalUI=1
+let g:NERDTreeDirArrowExpandable = '▸'
+let g:NERDTreeDirArrowCollapsible = '▾'
 
+" let g:jedi#popup_select_first=0
+" let g:jedi#auto_vim_configuration = 0
+" let g:jedi#popup_on_dot = 0
+
+" For deoplete
+" inoremap <silent><expr> <Tab>
+"     \ pumvisible() ? "\<C-n>" : deoplete#manual_complete()
+" let g:deoplete#enable_at_startup = 1
