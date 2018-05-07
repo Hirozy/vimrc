@@ -74,7 +74,7 @@ function! BuildYCM(info)
         !/usr/local/bin/python3 install.py --clang-completer --go-completer
     elseif has("win64") || has("win32") || has("win16")
         !echo "Nothing to do"
-    else
+    elseif has('unix')
         !/usr/bin/python3 install.py --clang-completer --go-completer
     endif
   endif
@@ -185,7 +185,9 @@ let g:airline_powerline_fonts=1
 
 
 " For YCM
-let g:ycm_global_ycm_extra_conf='~/.vim/ycm_extra_conf_mac.py'
+
+
+let g:ycm_global_ycm_extra_conf='~/.vim/ycm_extra_conf.py'
 let g:ycm_add_preview_to_completeopt=0
 let g:ycm_show_diagnostics_ui=0
 let g:ycm_server_log_level='info'
@@ -193,7 +195,14 @@ let g:ycm_min_num_identifier_candidate_chars=2
 let g:ycm_collect_identifiers_from_comments_and_strings=1
 let g:ycm_complete_in_strings=1
 let g:ycm_key_invoke_completion='<c-z>'
-let g:ycm_server_python_interpreter = '/usr/local/bin/python3' 
+
+if has('mac')
+    let g:ycm_server_python_interpreter = '/usr/local/bin/python3'
+elseif has('unix')
+    let g:ycm_server_python_interpreter = '/usr/bin/python3'
+endif
+
+let g:ycm_python_binary_path = 'python'
 let g:ycm_path_to_python_interpreter = ''
 set completeopt=menu,menuone
 
