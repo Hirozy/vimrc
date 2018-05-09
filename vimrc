@@ -123,6 +123,8 @@ Plug 'scrooloose/nerdtree', { 'on':  'NERDTreeToggle' }
 
 Plug 'Shougo/echodoc.vim'
 
+Plug 'scrooloose/nerdcommenter'
+
 " Initialize plugin system
 call plug#end()
 
@@ -211,13 +213,13 @@ let g:ycm_semantic_triggers={
 			\ 'cs,lua,javascript': ['re!\w{2}'],
 			\ }
 
-let g:ycm_filetype_whitelist={ 
-			\ 'c':1,
-			\ 'cpp':1, 
-			\ 'go':1,
-            \ 'python':1,
-            \ 'vim':1
-			\ }
+" let g:ycm_filetype_whitelist={
+			" \ 'c':1,
+			" \ 'cpp':1,
+			" \ 'go':1,
+            " \ 'python':1,
+            " \ 'vim':1
+			" \ }
 
 " For Pymode
 let g:pymode_optionsi = 1
@@ -226,6 +228,15 @@ let g:pymode_python = 'python3'
 let g:pymode_motion = 1
 let g:pymode_breakpoint = 1
 let g:pymode_breakpoint_bind = '<F8>b'
+let g:pymode_breakpoint_cmd = ''
+let g:pymode_syntax = 1
+let g:pymode_syntax_all = 1
+let g:pymode_syntax_indent_errors = g:pymode_syntax_all
+let g:pymode_syntax_space_errors = g:pymode_syntax_all
+let g:pymode_lint = 1
+let g:pymode_lint_checker = "pyflakes,pep8"
+let g:pymode_rope = 1
+
 
 " For vim-cpp-enhanced-highlight
 let g:cpp_class_scope_highlight = 1
@@ -272,3 +283,17 @@ let g:NERDTreeDirArrowCollapsible = '▾'
 " inoremap <silent><expr> <Tab>
 "     \ pumvisible() ? "\<C-n>" : deoplete#manual_complete()
 " let g:deoplete#enable_at_startup = 1
+
+
+" For NERD Commente
+" Add spaces after comment delimiters by default
+let g:NERDSpaceDelims = 1
+" Use compact syntax for prettified multi-line comments
+let g:NERDCompactSexyComs = 1
+" Align line-wise comment delimiters flush left instead of following code indentation
+let g:NERDDefaultAlign = 'left'
+" Allow commenting and inverting empty lines (useful when commenting a region)
+let g:NERDCommentEmptyLines = 1
+" Enable trimming of trailing whitespace when uncommenting
+let g:NERDTrimTrailingWhitespace = 1
+
