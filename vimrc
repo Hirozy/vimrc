@@ -219,8 +219,13 @@ let g:ycm_filetype_whitelist={
             \ 'vim':1
 			\ }
 
-let g:pymode_options=1
-let g:pymode_virtualenv=1
+" For Pymode
+let g:pymode_optionsi = 1
+let g:pymode_virtualenv = 1
+let g:pymode_python = 'python3'
+let g:pymode_motion = 1
+let g:pymode_breakpoint = 1
+let g:pymode_breakpoint_bind = '<F8>b'
 
 " For vim-cpp-enhanced-highlight
 let g:cpp_class_scope_highlight = 1
