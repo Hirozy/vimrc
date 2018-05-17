@@ -51,6 +51,8 @@ set undofile
 set undodir     =$HOME/.vim/files/undo/
 set viminfo     ='100,n$HOME/.vim/files/info/viminfo
 
+set backspace=indent,eol,start
+
 " Specify a directory for plugins
 " - For Neovim: ~/.local/share/nvim/plugged
 " - Avoid using standard Vim directory names like 'plugin'
@@ -100,7 +102,7 @@ Plug 'vim-airline/vim-airline-themes'
 
 Plug 'terryma/vim-multiple-cursors'
 
-Plug 'python-mode/python-mode', { 'branch': 'develop' }
+Plug 'python-mode/python-mode', { 'branch': 'develop', 'for': 'python' }
 
 Plug 'Raimondi/delimitMate'
 
@@ -110,8 +112,8 @@ Plug 'mhinz/vim-signify'
 
 Plug 'octol/vim-cpp-enhanced-highlight'
 
-" Plug 'SirVer/ultisnips'
-" Plug 'honza/vim-snippets'
+Plug 'SirVer/ultisnips'
+Plug 'honza/vim-snippets'
 
 " Plug 'lervag/vimtex'
 
@@ -119,7 +121,7 @@ Plug 'octol/vim-cpp-enhanced-highlight'
 Plug 'altercation/vim-colors-solarized'
 Plug 'tomasr/molokai'
 
-Plug 'scrooloose/nerdtree', { 'on':  'NERDTreeToggle' }
+Plug 'scrooloose/nerdtree'
 
 Plug 'Shougo/echodoc.vim'
 
@@ -149,7 +151,7 @@ nnoremap <F2>pi :PlugInstall <CR>
 nnoremap <F2>pu :PlugUpdate <CR>
 nnoremap <F2>pc :PlugClean <CR>
 nnoremap <F2>pp :PlugUpgrade <CR>
-nnoremap <C-n> :call ToggleNERD() <CR>
+nnoremap <F2>n :NERDTreeToggle <CR>
 
 function! CompileOption()
     exec "w"
@@ -174,11 +176,6 @@ function! CompileOptionWithInput()
     elseif &filetype == 'python'
         :AsyncRun -cwd="$(VIM_FILEDIR)" -mode=2 python3 "$(VIM_FILEPATH)" 
     endif
-endfunction
-
-function! ToggleNERD()
-    exec "NERDTreeToggle"
-    :AsyncRun echo "Toggle NERDTree"
 endfunction
 
 " For airline
@@ -236,6 +233,7 @@ let g:pymode_syntax_space_errors = g:pymode_syntax_all
 let g:pymode_lint = 1
 let g:pymode_lint_checker = "pyflakes,pep8"
 let g:pymode_rope = 1
+let g:pymode_options_max_line_length = 79
 
 
 " For vim-cpp-enhanced-highlight
@@ -263,15 +261,15 @@ let g:ale_cpp_cppcheck_options = ''
 
 " For ultisnips
 " Trigger configuration. Do not use <tab> if you use https://github.com/Valloric/YouCompleteMe.
-let g:UltiSnipsExpandTrigger="<F1>"
-let g:UltiSnipsJumpForwardTrigger="<c-b>"
-let g:UltiSnipsJumpBackwardTrigger="<c-z>"
+let g:UltiSnipsExpandTrigger = "<F1>"
+let g:UltiSnipsJumpForwardTrigger = "<c-b>"
+let g:UltiSnipsJumpBackwardTrigger = "<c-z>"
 
 " If you want :UltiSnipsEdit to split your window.
 " let g:UltiSnipsEditSplit="vertical"
 
 " For NerdTree
-let NERDTreeMinimalUI=1
+let NERDTreeMinimalUI = 1
 let g:NERDTreeDirArrowExpandable = '▸'
 let g:NERDTreeDirArrowCollapsible = '▾'
 
