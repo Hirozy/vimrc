@@ -39,6 +39,10 @@ set mouse=a                " Using the mouse
 
 set signcolumn=yes
 
+silent !mkdir $HOME/.vim/files/swap/ > /dev/null 2>&1
+silent !mkdir $HOME/.vim/files/undo/ > /dev/null 2>&1
+silent !mkdir $HOME/.vim/files/backup/ > /dev/null 2>&1
+
 " Put all temporary files under the same directory.
 " https://github.com/mhinz/vim-galore#handling-backup-swap-undo-and-viminfo-files
 set backup
@@ -115,7 +119,7 @@ Plug 'octol/vim-cpp-enhanced-highlight'
 Plug 'SirVer/ultisnips'
 Plug 'honza/vim-snippets'
 
-" Plug 'lervag/vimtex'
+Plug 'lervag/vimtex', {'for':['tex', 'plaintex']}
 
 " Color scheme
 Plug 'altercation/vim-colors-solarized'
@@ -133,11 +137,12 @@ call plug#end()
 " for solarized
 set background=dark
 colorscheme solarized
+let g:solarized_termcolors=256
 
 " for molokai
 " colorscheme molokai
 " let g:molokai_original = 1
-let g:rehash256 = 1
+" let g:rehash256 = 1
 
 let g:asyncrun_open=6
 let g:asyncrun_bell=1
@@ -232,6 +237,7 @@ let g:pymode_syntax_indent_errors = g:pymode_syntax_all
 let g:pymode_syntax_space_errors = g:pymode_syntax_all
 let g:pymode_lint = 1
 let g:pymode_lint_checker = "pyflakes,pep8"
+let g:pymode_lint_ignore = "E501"
 let g:pymode_rope = 1
 let g:pymode_options_max_line_length = 79
 
