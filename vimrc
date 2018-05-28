@@ -39,9 +39,9 @@ set mouse=a                " Using the mouse
 
 set signcolumn=yes
 
-silent !mkdir $HOME/.vim/files/swap/ > /dev/null 2>&1
-silent !mkdir $HOME/.vim/files/undo/ > /dev/null 2>&1
-silent !mkdir $HOME/.vim/files/backup/ > /dev/null 2>&1
+silent !mkdir -p $HOME/.vim/files/swap/ > /dev/null 2>&1
+silent !mkdir -p $HOME/.vim/files/undo/ > /dev/null 2>&1
+silent !mkdir -p $HOME/.vim/files/backup/ > /dev/null 2>&1
 
 " Put all temporary files under the same directory.
 " https://github.com/mhinz/vim-galore#handling-backup-swap-undo-and-viminfo-files
