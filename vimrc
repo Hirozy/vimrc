@@ -1,18 +1,17 @@
 set nocompatible
-
+  
+filetype plugin indent on   " Load plugins according to detected filetype.
 syntax on                   " Enable syntax highlighting.
 set nu
 set encoding=utf-8
 set clipboard=unnamed
 
-:set norelativenumber
+set norelativenumber
 augroup relative_number
     autocmd!
     autocmd InsertEnter * :set relativenumber
     autocmd InsertLeave * :set norelativenumber
 augroup END
-
-filetype plugin indent on   " Load plugins according to detected filetype.
 
 set tags=./.tags;,.tags     " Set tags
 
@@ -56,6 +55,8 @@ set undodir     =$HOME/.vim/files/undo/
 set viminfo     ='100,n$HOME/.vim/files/info/viminfo
 
 set backspace=indent,eol,start
+
+au! BufRead,BufNewFile *.csv,*.dat	setfiletype csv
 
 " Specify a directory for plugins
 " - For Neovim: ~/.local/share/nvim/plugged
@@ -130,6 +131,8 @@ Plug 'scrooloose/nerdtree'
 Plug 'Shougo/echodoc.vim'
 
 Plug 'scrooloose/nerdcommenter'
+
+Plug 'chrisbra/csv.vim'
 
 " Initialize plugin system
 call plug#end()
@@ -300,4 +303,8 @@ let g:NERDDefaultAlign = 'left'
 let g:NERDCommentEmptyLines = 1
 " Enable trimming of trailing whitespace when uncommenting
 let g:NERDTrimTrailingWhitespace = 1
+
+
+" For csv
+let did_load_csvfiletype=1
 
