@@ -82,7 +82,7 @@ function! BuildYCM(info)
     elseif has("win64") || has("win32") || has("win16")
         !echo "Nothing to do"
     elseif has('unix')
-        !/usr/bin/python3 install.py --clang-completer --go-completer
+        !/usr/bin/python3 install.py --clang-completer 
     endif
   endif
 endfunction
@@ -307,4 +307,11 @@ let g:NERDTrimTrailingWhitespace = 1
 
 " For csv
 let did_load_csvfiletype=1
+
+
+" NERDcommenter
+" Add spaces after comment delimiters by default
+let g:NERDSpaceDelims = 0
+" Enable trimming of trailing whitespace when uncommenting
+let g:NERDTrimTrailingWhitespace = 1
 
