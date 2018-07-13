@@ -1,3 +1,7 @@
+if has('python3')
+  silent! python3 1
+endif
+
 set nocompatible
   
 filetype plugin indent on   " Load plugins according to detected filetype.
