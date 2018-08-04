@@ -1,5 +1,6 @@
+" https://github.com/vim/vim/issues/3117
 if has('python3')
-  silent! python3 1
+    silent! python3 1
 endif
 
 set nocompatible
@@ -45,6 +46,8 @@ set signcolumn=yes
 silent !mkdir -p $HOME/.vim/files/swap/ > /dev/null 2>&1
 silent !mkdir -p $HOME/.vim/files/undo/ > /dev/null 2>&1
 silent !mkdir -p $HOME/.vim/files/backup/ > /dev/null 2>&1
+silent !mkdir -p /tmp/build/ > /dev/null 2>&1
+
 
 " Put all temporary files under the same directory.
 " https://github.com/mhinz/vim-galore#handling-backup-swap-undo-and-viminfo-files
@@ -82,7 +85,7 @@ function! BuildYCM(info)
   " - force:  set on PlugInstall! or PlugUpdate!
   if a:info.status == 'installed' || a:info.status == 'updated' ||  a:info.force
     if has('mac')
-        !/usr/local/bin/python3 install.py --clang-completer --go-completer
+        !/usr/local/bin/python3 install.py --clang-completer --go-completer 
     elseif has("win64") || has("win32") || has("win16")
         !echo "Nothing to do"
     elseif has('unix')
@@ -138,6 +141,8 @@ Plug 'scrooloose/nerdcommenter'
 
 Plug 'chrisbra/csv.vim'
 
+Plug 'dyng/ctrlsf.vim'
+
 " Initialize plugin system
 call plug#end()
 
@@ -154,7 +159,7 @@ let g:solarized_termcolors=256
 let g:asyncrun_open=6
 let g:asyncrun_bell=1
 nnoremap <silent> <F10> :call asyncrun#quickfix_toggle(6) <CR>
-nnoremap <silent> <F9> :AsyncRun g++ -g -Wall -O2 "$(VIM_FILEPATH)" -o "$(VIM_FILEDIR)/a.out" <CR>
+nnoremap <silent> <F9> :call CompileOptionCC() <CR>
 nnoremap <F5> :call CompileOption() <CR>
 nnoremap <F6> :call CompileOptionWithInput() <CR>
 
@@ -164,31 +169,59 @@ nnoremap <F2>pu :PlugUpdate <CR>
 nnoremap <F2>pc :PlugClean <CR>
 nnoremap <F2>pp :PlugUpgrade <CR>
 nnoremap <F2>n :NERDTreeToggle <CR>
+nnoremap <F2>l :call LeetCodeTest() <CR>
+nnoremap <F2>s :call LeetCodeSubmit() <CR>
+
+function! CompileOptionCC()
+    exec "w"
+    :AsyncRun g++ -g -Wall -O2 "$(VIM_FILEPATH)" -o "/tmp/build/a.out" 
+endfunction
 
 function! CompileOption()
     exec "w"
     if &filetype == 'cpp'
-        :AsyncRun g++ -g -Wall -O2 "$(VIM_FILEPATH)" -o "$(VIM_FILEDIR)/a.out"
+        :AsyncRun g++ -g -Wall -O2 "$(VIM_FILEPATH)" -o "/tmp/build/a.out"
         :sleep
-        :AsyncRun -raw -mode=0 -cwd="$(VIM_FILEDIR)" "$(VIM_FILEDIR)/a.out"
+        :AsyncRun -raw -mode=0 -cwd="$(VIM_FILEDIR)" "/tmp/build/a.out"
     elseif &filetype == 'python' 
         :AsyncRun -cwd="$(VIM_FILEDIR)" python3 "$(VIM_FILEPATH)"
     elseif &filetype == 'tex'
         :AsyncRun -cwd="$(VIM_FILEDIR)" pdflatex  -synctex=1 -interaction=nonstopmode -file-line-error -recorder "$(VIM_FILEPATH)"
+    elseif &filetype == 'c'
+        :AsyncRun gcc -g -Wall -O2 "$(VIM_FILEPATH)" -o "/tmp/build/a.out"
+        :sleep
+        :AsyncRun -raw="$(VIM_FILEDIR)" -mode=0 -raw "/tmp/build/a.out"
     endif
 endfunction
 
 function! CompileOptionWithInput()
     exec "w"
     if &filetype == 'cpp'
-        :AsyncRun g++ -g -Wall -O2 "$(VIM_FILEPATH)" -o "$(VIM_FILEDIR)/a.out"
+        :AsyncRun g++ -g -Wall -O2 "$(VIM_FILEPATH)" -o "/tmp/build/a.out"
         :call asyncrun#quickfix_toggle(6)
         :sleep
-        :AsyncRun -raw -mode=2 -cwd="$(VIM_FILEDIR)" "$(VIM_FILEDIR)/a.out"
+        :AsyncRun -raw -mode=2 -cwd="$(VIM_FILEDIR)" "/tmp/build/a.out"
     elseif &filetype == 'python'
         :AsyncRun -cwd="$(VIM_FILEDIR)" -mode=2 python3 "$(VIM_FILEPATH)" 
+    elseif &filetype == 'c'
+        :AsyncRun gcc -g -Wall -O2 "$(VIM_FILEPATH)" -o "/tmp/build/a.out"
+        :sleep
+        :AsyncRun -raw="$(VIM_FILEDIR)" -mode=2 -raw "/tmp/build/a.out"
     endif
 endfunction
+
+
+function! LeetCodeTest()
+    exec "w"
+    :AsyncRun -mode=2 leetcode test $(VIM_FILEPATH)
+endfunction
+
+
+function! LeetCodeSubmit()
+    exec "w"
+    :AsyncRun -mode=2 leetcode submit $(VIM_FILEPATH)
+endfunction
+
 
 " For airline
 let g:airline#extensions#tabline#enabled=1
@@ -211,7 +244,7 @@ elseif has('unix')
     let g:ycm_server_python_interpreter = '/usr/bin/python3'
 endif
 
-let g:ycm_python_binary_path = 'python'
+let g:ycm_python_binary_path = 'python3'
 let g:ycm_path_to_python_interpreter = ''
 set completeopt=menu,menuone
 
